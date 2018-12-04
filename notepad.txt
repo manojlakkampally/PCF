@@ -2,3 +2,21 @@ https://github.com/shakilakhtar/microservices-spring
 
 https://drive.google.com/file/d/0B1US-UzMWQrQNU1fNGEyank5RGhGVFJXQVBOSHo5bEhpVF9j/view
 
+cf login -a https://api.run.pivotal.io
+
+manojlakkampally@gmail.com
+
+
+F:\Manoj\spring-music
+
+cmd:    
+> cd F:\Manoj\spring-music
+
+
+F:\Manoj\spring-music> gradlew clean assemble
+
+F:\Manoj\spring-music>cf push
+
+F:\Manoj\spring-music>cf apps
+
+
