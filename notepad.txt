@@ -20,3 +20,89 @@ F:\Manoj\spring-music>cf push
 F:\Manoj\spring-music>cf apps
 
 
+. cf marketplace
+
+>cf create-service mongolab sandbox mymongo
+
+manifest.yml file required to push to pivotal
+
+
+we can create manifest file by using cmd line
+
+
+required attributes
+
+Applications:
+
+-name: donationwebsite
+
+buildpack:   used to compile binary . it should use to deploy in pivotal, not source code
+
+buildpack: https://github.com/heroku/heroku-buildpack-play.github
+
+stack:  windows2012
+domain: donation.com
+host;manage
+command : node app.js
+instance: 3
+memory:512M
+path:./web/   to static files
+timeout: 60   --for build timeout
+nor-route: true
+Servies:
+
+-mymongo-
+rabbitqueue 
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++
+
+instnaces: 2
+
+Applications:
+
+-name:donation webiste
+ path:./web/
+ 
+-name:doante
+  path;./web/
+ ++++++++++++++++++++++++++++++++++++++++++
+to use yml from another path  
+  
+ inherit;base_manifect.yml
+ Applcations:
+ -name:donation webiste
+ path:./web/
+ 
+-name:doante
+  path;./web/
+
+  
+  to bind service to app
+  
+  cf bind-service spring-music mysql
+  
+  to get  v cap variables
+  
+  F:\Manoj\spring-music>cf env spring-music
+  
+  to change scaling for app in cmd
+  
+  C:\>cf scale spring-music -i 2
+  
+  to change memory for instance
+  
+  cf scale customer-sa -m 512M
+  
+  
+  UAA--> user access and authentication
+  
+
+
+
+
+
+
+
