@@ -99,10 +99,501 @@ to use yml from another path
   
   UAA--> user access and authentication
   
+ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+  create user provided service and bind to ur application in cloud fondry
+   ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+
+
+
+F:\Manoj\spring-music>cf create-user-provided-service myOracle -p "test, test"
+
+test> test
+Creating user provided service myOracle in org manojlakkampally / space development as manojlakkampally@gmail.com...
+OK
+
+F:\Manoj\spring-music>cf bind myOracle
+'bind' is not a registered command. See 'cf help -a'
+
+F:\Manoj\spring-music>cf bs spring-music myOracle
+Binding service myOracle to app spring-music in org manojlakkampally / space development as manojlakkampally@gmail.com...
+OK
+TIP: Use 'cf restage spring-music' to ensure your env variable changes take effect
+
+F:\Manoj\spring-music>cf env spring-music
+Getting env variables for app spring-music in org manojlakkampally / space development as manojlakkampally@gmail.com...
+OK
+
+System-Provided:
+{
+ "VCAP_SERVICES": {
+  "user-provided": [
+   {
+    "binding_name": null,
+    "credentials": {
+     "test": "test"
+    },
+    "instance_name": "myOracle",
+    "label": "user-provided",
+    "name": "myOracle",
+    "syslog_drain_url": "",
+    "tags": [],
+    "volume_mounts": []
+   }
+  ]
+ }
+}
+
+{
+ "VCAP_APPLICATION": {
+  "application_id": "a3ebbbe5-900e-4a43-87c8-5b60e2ae385e",
+  "application_name": "spring-music",
+  "application_uris": [
+   "spring-music-chatty-porcupine.cfapps.io"
+  ],
+  "application_version": "68f75df7-1657-4f54-b991-f5db92b76f39",
+  "cf_api": "https://api.run.pivotal.io",
+  "limits": {
+   "disk": 1024,
+   "fds": 16384,
+   "mem": 1024
+  },
+  "name": "spring-music",
+  "space_id": "202dfbc5-4771-4260-9b94-ccf60bdfc4e3",
+  "space_name": "development",
+  "uris": [
+   "spring-music-chatty-porcupine.cfapps.io"
+  ],
+  "users": null,
+  "version": "68f75df7-1657-4f54-b991-f5db92b76f39"
+ }
+}
+
+No user-defined env variables have been set
+
+No running env variables have been set
+
+No staging env variables have been set
+ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+ 
+ 
+F:\Manoj\spring-music>cf create-route development com.manoj
+Creating route com.manoj for org manojlakkampally / space development as manojlakkampally@gmail.com...
+Domain com.manoj not found
+FAILED
+
+F:\Manoj\spring-music>cf domains
+Getting domains in org manojlakkampally as manojlakkampally@gmail.com...
+name            status   type   details
+cfapps.io       shared
+cf-tcpapps.io   shared   tcp
+apps.internal   shared          internal
+test.manoj      owned
+
+F:\Manoj\spring-music>cf domain
+'domain' is not a registered command. See 'cf help -a'
+
+Did you mean?
+      domains
+
+F:\Manoj\spring-music>cf create-route development cfapps.io tesy.manoj
+Creating route cfapps.io for org manojlakkampally / space development as manojlakkampally@gmail.com...
+The route is invalid: host is required for shared-domains
+FAILED
+
+F:\Manoj\spring-music>cf create-route development cfapps.io apps.internal
+Creating route cfapps.io for org manojlakkampally / space development as manojlakkampally@gmail.com...
+The route is invalid: host is required for shared-domains
+FAILED
+
+F:\Manoj\spring-music>
+ 
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+  
+  
+F:\Manoj\spring-music>cf security-groups
+Getting security groups as manojlakkampally@gmail.com...
+OK
+
+      name                            organization   space   lifecycle
+#0    credhub-internal-z2             <all>          <all>   running
+      credhub-internal-z2             <all>          <all>   staging
+#1    credhub-internal-z3             <all>          <all>   running
+      credhub-internal-z3             <all>          <all>   staging
+#2    dns                             <all>          <all>   running
+      dns                             <all>          <all>   staging
+#3    p-mysql                         <all>          <all>   running
+#4    p.mysql                         <all>          <all>   running
+#5    pcf-metrics                     <all>          <all>   running
+      pcf-metrics                     <all>          <all>   staging
+#6    pcf-rabbitmq-multitenant-prod   <all>          <all>   running
+#7    pcf-redis                       <all>          <all>   running
+#8    public_networks                 <all>          <all>   running
+      public_networks                 <all>          <all>   staging
+#9    rabbitmq                        <all>          <all>   running
+#10   ssh-logging                     <all>          <all>   running
+#11   udp80-logging                   <all>          <all>   running
+
+F:\Manoj\spring-music>
+ 
+ 
+F:\Manoj\spring-music>cf security-group public_networks
+Getting info for security group public_networks as manojlakkampally@gmail.com
+OK
+
+Name    public_networks
+Rules
+        [
+                {
+                        "destination": "0.0.0.0-9.255.255.255",
+                        "protocol": "all"
+                },
+                {
+                        "destination": "11.0.0.0-169.253.255.255",
+                        "protocol": "all"
+                },
+                {
+                        "destination": "169.255.0.0-172.15.255.255",
+                        "protocol": "all"
+                },
+                {
+                        "destination": "172.32.0.0-192.167.255.255",
+                        "protocol": "all"
+                },
+                {
+                        "destination": "192.169.0.0-255.255.255.255",
+                        "protocol": "all"
+                }
+        ]
+
+No spaces assigned
+ F:\Manoj\spring-music>cf create-security-group mysecurity F:\Manoj\Training\mysecurity.json
+Creating security group mysecurity as manojlakkampally@gmail.com
+FAILED
+Server error, status code: 403, error code: 10003, message: You are not authorized to perform the requested action
+
+F:\Manoj\spring-music>
+
+
+F:\Manoj\spring-music>cf running-security-groups
+Acquiring running security groups as 'manojlakkampally@gmail.com'
+OK
+
+public_networks
+dns
+ssh-logging
+p-mysql
+pcf-redis
+rabbitmq
+pcf-metrics
+p.mysql
+pcf-rabbitmq-multitenant-prod
+udp80-logging
+credhub-internal-z3
+credhub-internal-z2
+
+
+F:\Manoj\spring-music>cf security-group p-mysql
+Getting info for security group p-mysql as manojlakkampally@gmail.com
+OK
+
+Name    p-mysql
+Rules
+        [
+                {
+                        "destination": "10.10.2.0/24",
+                        "ports": "3306",
+                        "protocol": "tcp"
+                },
+                {
+                        "destination": "10.10.66.0/24",
+                        "ports": "3306",
+                        "protocol": "tcp"
+                },
+                {
+                        "destination": "10.10.130.0/24",
+                        "ports": "3306",
+                        "protocol": "tcp"
+                }
+        ]
+
+No spaces assigned
+
+F:\Manoj\spring-music>
+
+
+  
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+  To unbind security-group
+   
+F:\Manoj\spring-music>cf security-groups
+Getting security groups as manojlakkampally@gmail.com...
+OK
+
+      name                            organization   space   lifecycle
+#0    credhub-internal-z2             <all>          <all>   running
+      credhub-internal-z2             <all>          <all>   staging
+#1    credhub-internal-z3             <all>          <all>   running
+      credhub-internal-z3             <all>          <all>   staging
+#2    dns                             <all>          <all>   running
+      dns                             <all>          <all>   staging
+#3    p-mysql                         <all>          <all>   running
+#4    p.mysql                         <all>          <all>   running
+#5    pcf-metrics                     <all>          <all>   running
+      pcf-metrics                     <all>          <all>   staging
+#6    pcf-rabbitmq-multitenant-prod   <all>          <all>   running
+#7    pcf-redis                       <all>          <all>   running
+#8    public_networks                 <all>          <all>   running
+      public_networks                 <all>          <all>   staging
+#9    rabbitmq                        <all>          <all>   running
+#10   ssh-logging                     <all>          <all>   running
+#11   udp80-logging                   <all>          <all>   running
+
+F:\Manoj\spring-music>cf unbind-security-group p-mysql manojlakkampally development
+Unbinding security group p-mysql from org manojlakkampally / space development as manojlakkampally@gmail.com...
+You are not authorized to perform the requested action
+FAILED
+
+F:\Manoj\spring-music>
+
+
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+ create papartrail.com account created one system  Setup log_drain_Manoj  url-> logs7.papertrailapp.com:28121
+ 
+ 
+ 
+ 
+F:\Manoj\spring-music>cf cups log-drain-manoj -l syslog://logs7.papertrailapp.com:28121
+Creating user provided service log-drain-manoj in org manojlakkampally / space development as manojlakkampally@gmail.com...
+OK
+
+F:\Manoj\spring-music>cf bs spring-music log-drain-manoj
+Binding service log-drain-manoj to app spring-music in org manojlakkampally / space development as manojlakkampally@gmail.com...
+OK
+
+
+--refresh spring-music application you can see logs at papertrail logs windows
+
+Dec 08 14:31:06 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[STG/0]:  -----> Downloading Open Jdk JRE 1.8.0_192 from https://java-buildpack.cloudfoundry.org/openjdk/trusty/x86_64/openjdk-1.8.0_192.tar.gz (found in cache) 
+Dec 08 14:31:21 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[STG/0]:  Uploading droplet, build artifacts cache... 
+Dec 08 14:31:21 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[STG/0]:  Exit status 0 
+Dec 08 14:31:22 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[RTR/11]:  spring-music-chatty-porcupine.cfapps.io - [2018-12-08T09:01:22.366+0000] "OPTIONS /cloudfoundryapplication/mappings HTTP/1.1" 200 0 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36" "10.10.2.132:25978" "10.10.149.166:61026" x_forwarded_for:"42.104.115.109, 10.10.2.132" x_forwarded_proto:"https" vcap_request_id:"8c40b767-af54-4601-5f40-9c880f02c23a" response_time:0.01417217 app_id:"a3ebbbe5-900e-4a43-87c8-5b60e2ae385e" app_index:"0" x_b3_traceid:"121d8e2fb50eb1e6" x_b3_spanid:"121d8e2fb50eb1e6" x_b3_parentspanid:"-" 
+Dec 08 14:31:22 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[RTR/7]:  spring-music-chatty-porcupine.cfapps.io - [2018-12-08T09:01:22.369+0000] "OPTIONS /cloudfoundryapplication/info HTTP/1.1" 200 0 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36" "10.10.2.132:53370" "10.10.149.166:61026" x_forwarded_for:"42.104.115.109, 10.10.2.132" x_forwarded_proto:"https" vcap_request_id:"43ce8c66-eb37-4754-4a0f-0fbfebb881aa" response_time:0.01475007 app_id:"a3ebbbe5-900e-4a43-87c8-5b60e2ae385e" app_index:"0" x_b3_traceid:"bd866b40d4208cbf" x_b3_spanid:"bd866b40d4208cbf" x_b3_parentspanid:"-" 
+Dec 08 14:31:22 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[RTR/9]:  spring-music-chatty-porcupine.cfapps.io - [2018-12-08T09:01:22.626+0000] "GET /cloudfoundryapplication/health HTTP/1.1" 200 0 183 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36" "10.10.2.132:56086" "10.10.149.166:61026" x_forwarded_for:"42.104.115.109, 10.10.2.132" x_forwarded_proto:"https" vcap_request_id:"343ec760-e80d-4bdc-6a69-32cc28c537b8" response_time:0.042532863 app_id:"a3ebbbe5-900e-4a43-87c8-5b60e2ae385e" app_index:"0" x_b3_traceid:"cdced099bb955bb9" x_b3_spanid:"cdced099bb955bb9" x_b3_parentspanid:"-" 
+Dec 08 14:31:27 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[STG/0]:  Uploaded droplet (87.3M) 
+Dec 08 14:31:31 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[API/3]:  Added process: "task" 
+Dec 08 14:31:32 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[API/5]:  Starting app with guid a3ebbbe5-900e-4a43-87c8-5b60e2ae385e 
+Dec 08 14:31:32 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[STG/0]:  Cell f237c36d-0a62-4579-a51b-b11ee1d58145 successfully destroyed container for instance 6ff5a56e-0ade-406c-9a0b-c8af2be1c73f 
+Dec 08 14:31:35 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[CELL/0]:  Cell f237c36d-0a62-4579-a51b-b11ee1d58145 successfully created container for instance 69aad9c5-ef0d-4c33-7817-2163 
+Dec 08 14:31:36 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:36.249  INFO 31 --- [       Thread-5] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown 
+Dec 08 14:31:36 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:36.293  INFO 31 --- [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed. 
+Dec 08 14:31:37 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[PROXY/0]:  Exit status 137 
+Dec 08 14:31:38 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  JVM Memory Configuration: -Xmx407782K -Xss1M -XX:ReservedCodeCacheSize=240M -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=128793K 
+Dec 08 14:31:43 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:42.866  INFO 16 --- [           main] o.c.samples.music.Application            : Starting Application on 69aad9c5-ef0d-4c33-7817-2163 with PID 16 (/home/vcap/app/BOOT-INF/classes started by vcap in /home/vcap/app) 
+Dec 08 14:31:46 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:46.583  INFO 16 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http) 
+Dec 08 14:31:47 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:46.641  INFO 16 --- [ost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib] 
+Dec 08 14:31:49 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  	name: default 
+Dec 08 14:31:49 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  	...] 
+Dec 08 14:31:51 log_drain_Manoj a3ebbbe5-900e-4a43-87c8-5b60e2ae385e/[APP/PROC/WEB/0]:  2018-12-08 09:01:51.197  INFO 16 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**/favicon.ico] onto handler of type [class 
+ 
+ 
+
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+ 
+
+ 
+F:\Manoj\spring-music>cf domains
+Getting domains in org manojlakkampally as manojlakkampally@gmail.com...
+name            status   type   details
+cfapps.io       shared
+cf-tcpapps.io   shared   tcp
+apps.internal   shared          internal
+test.manoj      owned
+
+F:\Manoj\spring-music>cf push spring-music -d cf-tcpapps.io --random-route
+Pushing from manifest to org manojlakkampally / space development as manojlakkampally@gmail.com...
+Using manifest file F:\Manoj\spring-music\manifest.yml
+Getting app info...
+Updating app with these attributes...
+  name:                spring-music
+  path:                F:\Manoj\spring-music\build\libs\spring-music-1.0.jar
+  buildpacks:
+    https://github.com/cloudfoundry/java-buildpack.git
+  command:             JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -XX:ActiveProcessorCount=$(nproc) -Djava.io.tmpdir=$TMPDIR -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=20325 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher
+  disk quota:          1G
+  health check type:   port
+  instances:           1
+  memory:              1G
+  stack:               cflinuxfs2
+  services:
+    log-drain-manoj
+    myOracle
+  routes:
+    spring-music-chatty-porcupine.cfapps.io
+
+Updating app spring-music...
+Mapping routes...
+Comparing local files to remote cache...
+Packaging files to upload...
+Uploading files...
+ 517.17 KiB / 517.17 KiB [======================================================================================================================================================================================================] 100.00% 4s
+
+Waiting for API to complete processing files...
+
+Stopping app...
+
+Staging app and tracing logs...
+   Cell 79f5396a-4d50-4880-91c5-fb071bafc57e creating container for instance 302f0a9b-4722-4222-a163-41a845470dd4
+   Cell 79f5396a-4d50-4880-91c5-fb071bafc57e successfully created container for instance 302f0a9b-4722-4222-a163-41a845470dd4
+   Downloading app package...
+   Downloading build artifacts cache...
+   Downloaded build artifacts cache (46.5M)
+   Downloaded app package (40.6M)
+   -----> Java Buildpack 4f3ea3c | https://github.com/cloudfoundry/java-buildpack.git#4f3ea3c
+   -----> Downloading Jvmkill Agent 1.16.0_RELEASE from https://java-buildpack.cloudfoundry.org/jvmkill/trusty/x86_64/jvmkill-1.16.0_RELEASE.so (found in cache)
+   -----> Downloading Open Jdk JRE 1.8.0_192 from https://java-buildpack.cloudfoundry.org/openjdk/trusty/x86_64/openjdk-1.8.0_192.tar.gz (found in cache)
+          Expanding Open Jdk JRE to .java-buildpack/open_jdk_jre (1.1s)
+          JVM DNS caching disabled in lieu of BOSH DNS caching
+   -----> Downloading Open JDK Like Memory Calculator 3.13.0_RELEASE from https://java-buildpack.cloudfoundry.org/memory-calculator/trusty/x86_64/memory-calculator-3.13.0_RELEASE.tar.gz (found in cache)
+          Loaded Classes: 19546, Threads: 250
+   -----> Downloading Client Certificate Mapper 1.8.0_RELEASE from https://java-buildpack.cloudfoundry.org/client-certificate-mapper/client-certificate-mapper-1.8.0_RELEASE.jar (found in cache)
+   -----> Downloading Container Security Provider 1.16.0_RELEASE from https://java-buildpack.cloudfoundry.org/container-security-provider/container-security-provider-1.16.0_RELEASE.jar (found in cache)
+   -----> Downloading Spring Auto Reconfiguration 2.5.0_RELEASE from https://java-buildpack.cloudfoundry.org/auto-reconfiguration/auto-reconfiguration-2.5.0_RELEASE.jar (found in cache)
+   Exit status 0
+   Uploading droplet, build artifacts cache...
+   Uploading build artifacts cache...
+   Uploading droplet...
+   Uploaded build artifacts cache (46.5M)
+   Uploaded droplet (87.3M)
+   Uploading complete
+   Cell 79f5396a-4d50-4880-91c5-fb071bafc57e stopping instance 302f0a9b-4722-4222-a163-41a845470dd4
+   Cell 79f5396a-4d50-4880-91c5-fb071bafc57e destroying container for instance 302f0a9b-4722-4222-a163-41a845470dd4
+
+Waiting for app to start...
+   Cell 79f5396a-4d50-4880-91c5-fb071bafc57e successfully destroyed container for instance 302f0a9b-4722-4222-a163-41a845470dd4
+
+name:              spring-music
+requested state:   started
+routes:            spring-music-chatty-porcupine.cfapps.io
+last uploaded:     Sat 08 Dec 15:03:18 IST 2018
+stack:             cflinuxfs2
+buildpacks:        https://github.com/cloudfoundry/java-buildpack.git
+
+type:            web
+instances:       1/1
+memory usage:    1024M
+start command:   JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -XX:ActiveProcessorCount=$(nproc) -Djava.io.tmpdir=$TMPDIR
+                 -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" &&
+                 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=20325 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") &&
+                 echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.
+                 org.springframework.boot.loader.JarLauncher
+     state     since                  cpu      memory       disk           details
+#0   running   2018-12-08T09:33:50Z   242.1%   244M of 1G   170.8M of 1G
+
+type:            task
+instances:       0/0
+memory usage:    1024M
+start command:   JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.16.0_RELEASE=printHeapHistogram=1 -XX:ActiveProcessorCount=$(nproc) -Djava.io.tmpdir=$TMPDIR
+                 -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security $JAVA_OPTS" &&
+                 CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=20325 -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") &&
+                 echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2 SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/.
+                 org.springframework.boot.loader.JarLauncher
+
+There are no running instances of this process.
+
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+ 
+
+F:\Manoj\spring-music>cf map-route spring-music cfapps.io --port 60010
+Creating route cfapps.io:60010 for org manojlakkampally / space development as manojlakkampally@gmail.com...
+FAILED
+Error resolving route:
+Server error, status code: 400, error code: 210001, message: The route is invalid: Port is supported for domains of TCP router groups only.
+
+F:\Manoj\spring-music>cf domains
+Getting domains in org manojlakkampally as manojlakkampally@gmail.com...
+name            status   type   details
+cfapps.io       shared
+cf-tcpapps.io   shared   tcp
+apps.internal   shared          internal
+test.manoj      owned
+
+F:\Manoj\spring-music>cf map-route spring-music cf-tcpapps.io --port 60010
+Creating route cf-tcpapps.io:60010 for org manojlakkampally / space development as manojlakkampally@gmail.com...
+FAILED
+Error resolving route:
+Server error, status code: 400, error code: 210001, message: The route is invalid: The requested port is not available for reservation. Try a different port or request a random one be generated for you.
+
+F:\Manoj\spring-music>cf map-route spring-music cf-tcpapps.io --port 60012
+Creating route cf-tcpapps.io:60012 for org manojlakkampally / space development as manojlakkampally@gmail.com...
+FAILED
+Error resolving route:
+Server error, status code: 400, error code: 210001, message: The route is invalid: The requested port is not available for reservation. Try a different port or request a random one be generated for you.
+
+F:\Manoj\spring-music>cf map-route spring-music cf-tcpapps.io --port 60600
+Creating route cf-tcpapps.io:60600 for org manojlakkampally / space development as manojlakkampally@gmail.com...
+FAILED
+Error resolving route:
+Server error, status code: 400, error code: 210001, message: The route is invalid: The requested port is not available for reservation. Try a different port or request a random one be generated for you.
+
+F:\Manoj\spring-music>cf map-route spring-music cf-tcpapps.io --port 61986
+Creating route cf-tcpapps.io:61986 for org manojlakkampally / space development as manojlakkampally@gmail.com...
+FAILED
+Error resolving route:
+Server error, status code: 400, error code: 210001, message: The route is invalid: The requested port is not available for reservation. Try a different port or request a random one be generated for you.
+
+F:\Manoj\spring-music>
+
+
+
+
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ https://microservices.io/   , Orelly
+ cloudfoundry docs
+ cloud foundry api docs
+ 
+ https://s3.amazonaws.com/quickstart-reference/pivotal/cloudfoundry/latest/doc/pivotal-cloud-foundry-on-the-aws-cloud.pdf
+ 2shakil.akthtar@gmail.com
+ 
+ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
 
 
 
 
 
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
