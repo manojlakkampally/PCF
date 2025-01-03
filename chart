@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: wheat; /* Changed to wheat color */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2rem;
+            color: #333333; /* Darker text for better contrast */
+            text-align: center;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        canvas {
+            display: block;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sales Performance Dashboard</h1>
+
+    <div class="chart-container">
+        <canvas id="totalSalesChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="salesByPromoChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="salesByDateChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="topAccountsChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="tranTypeChart"></canvas>
+    </div>
+
+    <script>
+        const salesData = [
+            {
+                "shopname": 998897,
+                "tranDate": "12/18/2024",
+                "account": 4189,
+                "saleAmt": 299,
+                "promocode": 101,
+                "tranType": "purchase"
+            },
+            {
+                "shopname": 998897,
+                "tranDate": "12/18/2024",
+                "account": 4189,
+                "saleAmt": 300,
+                "promocode": 101,
+                "tranType": "purchase"
+            },
+            {
+                "shopname": 998897,
+                "tranDate": "12/18/2024",
+                "account": 4188,
+                "saleAmt": 212,
+                "promocode": 101,
+                "tranType": "purchase"
+            },
+            {
+                "shopname": 998897,
+                "tranDate": "12/19/2024",
+                "account": 4188,
+                "saleAmt": 423,
+                "promocode": 102,
+                "tranType": "purchase"
+            },
+            {
+                "shopname": 998897,
+                "tranDate": "12/19/2024",
+                "account": 4199,
+                "saleAmt": 423,
+                "promocode": 111,
+                "tranType": "purchase"
+            },
+			{
+                "shopname": 998897,
+                "tranDate": "12/11/2024",
+                "account": 4168,
+                "saleAmt": 421,
+                "promocode": 111,
+                "tranType": "purchase"
+            },
+            {
+                "shopname": 998897,
+                "tranDate": "12/10/2024",
+                "account": 4166,
+                "saleAmt": 657,
+                "promocode": 191,
+                "tranType": "purchase"
+            }
+        ];
+
+        const aggregateBy = (data, key) => {
+            return data.reduce((acc, item) => {
+                acc[item[key]] = (acc[item[key]] || 0) + item.saleAmt;
+                return acc;
+            }, {});
+        };
+
+        // Total Sales Over Time (line chart)
+        const salesByDate = aggregateBy(salesData, 'tranDate');
+        new Chart(document.getElementById('totalSalesChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(salesByDate),
+                datasets: [{
+                    label: 'Total Sales Over Time',
+                    data: Object.values(salesByDate),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Sales by Promo Code (pie chart)
+        const salesByPromo = aggregateBy(salesData, 'promocode');
+        new Chart(document.getElementById('salesByPromoChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(salesByPromo),
+                datasets: [{
+                    data: Object.values(salesByPromo),
+                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#74b9ff']
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Sales by Date (line chart)
+        new Chart(document.getElementById('salesByDateChart'), {
+            type: 'line',
+            data: {
+                labels: Object.keys(salesByDate),
+                datasets: [{
+                    label: 'Sales by Date',
+                    data: Object.values(salesByDate),
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    fill: true
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Top Accounts by Sales (pie chart)
+        const salesByAccount = aggregateBy(salesData, 'account');
+        const sortedAccounts = Object.entries(salesByAccount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+        new Chart(document.getElementById('topAccountsChart'), {
+            type: 'pie',
+            data: {
+                labels: sortedAccounts.map(item => `Account ${item[0]}`),
+                datasets: [{
+                    data: sortedAccounts.map(item => item[1]),
+                    backgroundColor: ['#74b9ff', '#a29bfe', '#e17055', '#fd79a8', '#00cec9']
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Transaction Type Distribution (pie chart)
+        const salesByTranType = aggregateBy(salesData, 'tranType');
+        new Chart(document.getElementById('tranTypeChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(salesByTranType),
+                datasets: [{
+                    data: Object.values(salesByTranType),
+                    backgroundColor: ['#55efc4', '#81ecec', '#fdcb6e', '#e17055', '#74b9ff']
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+</body>
+</html>
